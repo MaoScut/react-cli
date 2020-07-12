@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import classNames from 'classnames'
 
 import styles from './style.css'
@@ -12,5 +12,5 @@ export default function App (props: IAppProps) {
     <div>
       
     </div>
-  );
+  )
 }

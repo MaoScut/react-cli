@@ -8,13 +8,14 @@ import (
 	"strings"
 )
 
+const functionComponentFileName = "fc.tsx"
+
 var dashReg = regexp.MustCompile(`-[a-zA-Z]`)
 
 // name 是用短线连接的
-// TODO: 具体路径还没实现
-func GenerateReactFc(templateFilePath string, outDir string, name string) error {
+func GenerateReactFc(templateFileDir string, outDir string, name string) error {
 	var err error
-	f, err := ioutil.ReadFile(templateFilePath)
+	f, err := ioutil.ReadFile(templateFileDir + "/" + functionComponentFileName)
 	if err != nil {
 		fmt.Print(err)
 		return err

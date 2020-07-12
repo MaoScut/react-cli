@@ -3,16 +3,20 @@ package main
 import (
 	"fmt"
 	"github.com/madp/react-cli/components"
+	"github.com/madp/react-cli/utils"
 	"github.com/urfave/cli/v2"
-	"io/ioutil"
 	"log"
 	"os"
-	"strings"
+	"os/user"
 )
 
-const templatePath = "./templates"
-
 func main() {
+	var err error
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	templatesDir := user.HomeDir + "/" + ".react-cli/templates"
 	app := &cli.App{
 		Commands: []*cli.Command{
 			{
@@ -42,10 +46,12 @@ func main() {
 						Name:  "fc",
 						Usage: "add a new function component",
 						Action: func(c *cli.Context) error {
-							err := components.GenerateReactFc(
-								"./templates/fc.tsx",
-								".",
-								c.Args().First(),
+							var err error
+							dir, fileName := utils.GetDirAndFileName(c.Args().First())
+							err = components.GenerateReactFc(
+								templatesDir,
+								dir,
+								fileName,
 							)
 							return err
 						},
@@ -63,18 +69,8 @@ func main() {
 		},
 	}
 
-	err := app.Run(os.Args)
+	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func generateReactFcTemplateStr(templateFilePath string, name string) (string, error) {
-	f, err := ioutil.ReadFile(templateFilePath)
-	if err != nil {
-		fmt.Print(err)
-		return "", err
-	}
-	result := strings.Replace(string(f), "App", name, -1)
-	return result, nil
 }
